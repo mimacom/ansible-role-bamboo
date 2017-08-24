@@ -13,7 +13,7 @@ Role Variables
 
 These role variables are mandatory:
 ```yaml
-todo: # description
+bamboo_version: x.y.z # Full version number to install or upgrade to
 ```
 
 Dependencies
