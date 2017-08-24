@@ -21,7 +21,8 @@ galaxy_info:
 
   platforms:
     - name: EL
-      - 7
+      versions:
+        - 7
 
   galaxy_tags:
     - atlassian
