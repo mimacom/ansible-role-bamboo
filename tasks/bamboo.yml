@@ -1,4 +1,8 @@
 ---
+- name: Set application directory
+  set_fact:
+    bamboo_application_directory: "{{ bamboo_root_directory }}/atlassian-bamboo-{{ bamboo_version }}"
+
 - name: "Install JDK"
   yum:
     name: "java-{{ openjdk_version }}-openjdk"

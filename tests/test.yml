@@ -1,5 +1,14 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
+  become: true
+  vars:
+    bamboo_version: "6.1.1"
+    bamboo_proxy_fqdn: "bamboo.org.invalid"
   roles:
-    - bamboo-agent
+    - bamboo
+  post_tasks:
+    - name: Set hostname in hosts file
+      lineinfile:
+        path: /etc/hosts
+        line: "127.0.0.1 bamboo.org.invalid"
+      delegate_to: 127.0.0.1
