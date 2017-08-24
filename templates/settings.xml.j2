@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<mirrors>
+		<mirror>
+			<id>mimacom-mirror</id>
+			<mirrorOf>*</mirrorOf>
+			<url>https://nexus.mimacom.com/content/groups/mimacom-private</url>
+			<name>mimacom ag - Maven Repository Proxy</name>
+		</mirror>
+	</mirrors>
+
+	<profiles>
+		<profile>
+			<id>mimacom</id>
+
+			<properties>
+			    <!-- DEPLOY paths for distributionManagement -->
+				<mimacom-deploy-path-releases-closed>https://nexus.mimacom.com/content/repositories/mimacom-releases-closed</mimacom-deploy-path-releases-closed>
+				<mimacom-deploy-path-snapshots-closed>https://nexus.mimacom.com/content/repositories/mimacom-snapshots-closed</mimacom-deploy-path-snapshots-closed>
+				<mimacom-deploy-path-sites-closed>dav:https://nexus.mimacom.com/content/repositories/mimacom-sites-closed</mimacom-deploy-path-sites-closed>
+
+				<mimacom-deploy-path-releases-open>https://nexus.mimacom.com/content/repositories/mimacom-releases-open</mimacom-deploy-path-releases-open>
+				<mimacom-deploy-path-snapshots-open>https://nexus.mimacom.com/content/repositories/mimacom-snapshots-open</mimacom-deploy-path-snapshots-open>
+				<mimacom-deploy-path-sites-open>dav:https://nexus.mimacom.com/content/repositories/mimacom-sites-open</mimacom-deploy-path-sites-open>
+
+				<mimacom-deploy-path-thirdparty>https://nexus.mimacom.com/content/repositories/mimacom-thirdparty</mimacom-deploy-path-thirdparty>
+
+				<sonar.jdbc.url><![CDATA[jdbc:mysql://mima-sonarqube-01.mimacom.local:3306/sonar?useUnicode=true&characterEncoding=utf8]]></sonar.jdbc.url>
+				<sonar.jdbc.driverClassName>com.mysql.jdbc.Driver</sonar.jdbc.driverClassName>
+				<sonar.jdbc.username>sonar</sonar.jdbc.username>
+				<sonar.jdbc.password>u6ixdnhw</sonar.jdbc.password>
+				<sonar.host.url>https://sonar.mimacom.com</sonar.host.url>
+
+				<sonar.login>sonar</sonar.login>
+				<sonar.password>u6ixdnhw</sonar.password>
+
+				<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+
+			</properties>
+
+			<!-- replace central repository to force maven using the proxy (no fallback to central) -->
+			<repositories>
+				<repository>
+					<id>central</id>
+					<url>http://nexus.mimacom.com</url>
+					<releases><enabled>true</enabled></releases>
+					<snapshots><enabled>true</enabled></snapshots>
+				</repository>
+
+                <!--                                  -->
+    			<!-- releases and deploy repositories -->
+    			<!--                                  -->
+    			
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>central</id>
+					<url>https://nexus.mimacom.com</url>
+					<releases><enabled>true</enabled></releases>
+					<snapshots><enabled>true</enabled></snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+
+		</profile>
+		
+	</profiles>
+
+	<activeProfiles>
+		<activeProfile>mimacom</activeProfile>
+	</activeProfiles>
+
+	<pluginGroups>
+		<pluginGroup>ch.edoras.plugins</pluginGroup>
+		<pluginGroup>org.mimacom.maven.plugins</pluginGroup>
+		<pluginGroup>org.sonatype.plugins</pluginGroup>
+	</pluginGroups>
+
+	<servers>
+  {% for server in maven_settings.servers %}
+  <!-- {{ server.description }} -->
+    <server>
+      <id>{{ server.id }}</id>
+      <username>{{ server.username }}</username>
+      <password>{{ server.password }}</password>
+    </server>
+
+  {% endfor %}
+</servers>
+
+
+</settings>
+

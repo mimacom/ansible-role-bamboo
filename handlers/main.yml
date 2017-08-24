@@ -1,0 +1,7 @@
+---
+- name: restart bamboo
+  systemd:
+    name: bamboo
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,121 @@
+---
+- name: "Install JDK"
+  yum:
+    name: "java-{{ openjdk_version }}-openjdk"
+    state: installed
+
+- name: Add local user
+  user:
+    name: "{{ bamboo_user }}"
+
+- name: Create app and data folders
+  file:
+    name: "{{ item }}"
+    state: directory
+    owner: "{{ bamboo_user }}"
+    group: "{{ bamboo_user }}"
+  with_items:
+    - "{{ bamboo_home_directory }}"
+    - "{{ bamboo_root_directory }}"
+
+- name: Download and unpack bamboo
+  unarchive:
+    src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_version }}.tar.gz"
+    dest: "{{ bamboo_root_directory }}"
+    remote_src: True
+    # keep our modified, newer files instead of overriding from the tarball
+    keep_newer: yes
+  changed_when: False
+
+- name: Configure bamboo server (server.xml)
+  template:
+    src: server.xml.j2
+    dest: "{{ bamboo_application_directory }}/conf/server.xml"
+  notify: restart bamboo
+
+- name: Create current version file
+  file:
+    name: "{{ bamboo_root_directory }}/current"
+    state: touch
+    mode: 0644
+    owner: "{{ bamboo_user }}"
+    group: "{{ bamboo_user }}"
+  changed_when: False
+    
+- name: Update current version file
+  template:
+    src: current.j2
+    dest: "{{ bamboo_root_directory }}/current"
+  notify: restart bamboo
+  register: current_version
+
+- name: Stop bamboo if newer version is going to be installed
+  systemd:
+    name: bamboo
+    state: stopped
+  when: current_version.changed
+
+- name: Copy logrotate script for syslog
+  copy:
+    src: syslog
+    dest: /etc/logrotate.d/syslog
+
+- name: Add cronjob for cleanup Bamboo logs
+  cron:
+    name: cleanupbamboologs
+    special_time: daily
+    state: present
+    job: "/usr/bin/find {{ bamboo_application_directory }}/logs/ -name *.log -type f -mtime +7 -exec rm  {} \\;"
+
+- name: Add cronjob for cleanup Bamboo build-dir
+  cron:
+    name: cleanupbamboobuilddir
+    hour: 03
+    minute: 15
+    weekday: 0 # sunday
+    state: present
+    job: "/usr/bin/find {{ bamboo_home_directory }}/xml-data/build-dir/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
+
+- name: Add cronjob for cleanup maven repository cache
+  cron:
+    name: cleanupbamboomavenrepo
+    hour: 03
+    minute: 15
+    weekday: 0 # sunday
+    state: present
+    job: "/usr/bin/find {{ bamboo_home_directory }}/.m2/repository/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
+
+- name: Install bamboo systemd unit script
+  template:
+    src: bamboo.service.j2
+    dest: /etc/systemd/system/bamboo.service
+    mode: 0744
+  notify: restart bamboo
+
+- name: Set bamboo.home property variable
+  template:
+    src: bamboo-init.properties
+    dest: "{{ bamboo_application_directory }}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
+  notify: restart bamboo
+
+- name: Set JVM settings
+  replace:
+    dest: "{{ bamboo_application_directory }}/bin/setenv.sh"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - regexp: 'JVM_MINIMUM_MEMORY="[0-9]+[bkmg]'
+      replace: 'JVM_MINIMUM_MEMORY="{{ bamboo_jvm_heap_min }}'
+    - regexp: 'JVM_MAXIMUM_MEMORY="[0-9]+[bkmg]'
+      replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_jvm_heap_max }}'
+  notify: restart bamboo
+
+- name: Fix permissions on application folder
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    owner: "{{ bamboo_user }}"
+    group: "{{ bamboo_user }}"
+  changed_when: False
+  with_items:
+    - "{{ bamboo_application_directory }}"

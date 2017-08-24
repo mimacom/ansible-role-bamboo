@@ -1,0 +1,14 @@
+[Unit]
+Description=bamboo
+After=syslog.target network.target
+
+[Service]
+Environment=PATH=/opt/java/jdk1.8/bin/:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin:/opt/nodejs/node-v6/bin
+Type=forking
+User=bamboo
+Group=bamboo
+ExecStart={{ bamboo_application_directory }}/bin/start-bamboo.sh
+ExecStop={{ bamboo_application_directory }}/bin/stop-bamboo.sh
+
+[Install]
+WantedBy=multi-user.target
