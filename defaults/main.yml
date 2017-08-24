@@ -3,3 +3,5 @@ bamboo_user: bamboo
 bamboo_root_directory: "/opt/atlassian/bamboo"
 bamboo_home_directory: "/var/atlassian/application-data/bamboo"
 openjdk_version: "1.8.0"
+bamboo_jvm_heap_min: 1g
+bamboo_jvm_heap_max: 1g

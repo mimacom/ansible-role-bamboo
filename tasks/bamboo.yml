@@ -22,6 +22,25 @@
     - "{{ bamboo_home_directory }}"
     - "{{ bamboo_root_directory }}"
 
+- name: Check for downgrade
+  fail: msg="Downgrades are not supported. Please set bamboo_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_version }}"
+  when:
+    - ansible_local is defined
+    - ansible_local.bamboo is defined
+    - ansible_local.bamboo.version is defined
+    - bamboo_version | version_compare(ansible_local.bamboo.version, '<')
+
+- name: Stop when upgrade
+  systemd:
+    name: bamboo
+    state: stopped
+  when:
+    - ansible_local is defined
+    - ansible_local.bamboo is defined
+    - ansible_local.bamboo.version is defined
+    - bamboo_version | version_compare(ansible_local.bamboo.version, '>')
+  notify: restart bamboo
+
 - name: Download and unpack bamboo
   unarchive:
     src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_version }}.tar.gz"
@@ -36,28 +55,6 @@
     src: server.xml.j2
     dest: "{{ bamboo_application_directory }}/conf/server.xml"
   notify: restart bamboo
-
-- name: Create current version file
-  file:
-    name: "{{ bamboo_root_directory }}/current"
-    state: touch
-    mode: 0644
-    owner: "{{ bamboo_user }}"
-    group: "{{ bamboo_user }}"
-  changed_when: False
-    
-- name: Update current version file
-  template:
-    src: current.j2
-    dest: "{{ bamboo_root_directory }}/current"
-  notify: restart bamboo
-  register: current_version
-
-- name: Stop bamboo if newer version is going to be installed
-  systemd:
-    name: bamboo
-    state: stopped
-  when: current_version.changed
 
 - name: Copy logrotate script for syslog
   copy:
@@ -123,3 +120,21 @@
   changed_when: False
   with_items:
     - "{{ bamboo_application_directory }}"
+
+- name: Ensure ansible facts folder exists
+  file:
+    name: /etc/ansible/facts.d/
+    state: directory
+    recurse: yes
+
+- name: Ensure bamboo facts exists
+  file:
+    name: /etc/ansible/facts.d/bamboo.fact
+    state: touch
+  changed_when: False
+
+- name: Update bamboo facts
+  template:
+    src: bamboo.fact.j2
+    dest: /etc/ansible/facts.d/bamboo.fact
+  notify: restart bamboo
