@@ -20,8 +20,8 @@ galaxy_info:
   #github_branch:
 
   platforms:
-  - name: EL
-    - 7
+    - name: EL
+      - 7
 
   galaxy_tags:
     - atlassian
