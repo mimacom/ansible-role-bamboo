@@ -3,7 +3,18 @@ Description=bamboo
 After=syslog.target network.target
 
 [Service]
-Environment=PATH=/opt/java/jdk1.8/bin/:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin:/opt/nodejs/node-v6/bin
+Environment=PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin{% if bamboo is defined %}{% for item in bamboo %}{% if item.binary_path is defined %}:{{ item.binary_path }}{% endif %}{% endfor %}{% endif %}
+
+
+Environment=HTTP_PROXY={% if http_proxy is defined %}{{ http_proxy.protocol }}://{{ http_proxy.host }}:{{ http_proxy.port }}{% endif %}
+
+
+Environment=HTTPS_PROXY={% if http_proxy is defined %}{{ http_proxy.protocol }}://{{ http_proxy.host }}:{{ http_proxy.port }}{% endif %}
+
+
+Environment=NO_PROXY={% if http_proxy is defined %}{{ http_proxy.exception | default('') | join(",") }}{% endif %}
+
+
 Type=forking
 User=bamboo
 Group=bamboo
