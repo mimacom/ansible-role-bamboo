@@ -63,7 +63,7 @@
             {% if bamboo_master is defined and bamboo_master.fqdn is defined %}
             proxyName="{{ bamboo_master.fqdn }}"
             proxyPort="{{ bamboo_master.port }}"
-            scheme="{% if bamboo_master.https is defined and bamboo_master.https is true %}https{% else %}http{% endif %}"
+            scheme="{% if bamboo_master.https is defined and bamboo_master.https %}https{% else %}http{% endif %}"
             {% endif %}
 
             redirectPort="8443"
