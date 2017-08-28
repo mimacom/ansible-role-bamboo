@@ -48,6 +48,8 @@
     remote_src: True
     # keep our modified, newer files instead of overriding from the tarball
     keep_newer: yes
+    owner: "{{ bamboo_master_user }}"
+    group: "{{ bamboo_master_user }}"
   changed_when: False
 
 - name: Configure bamboo server (server.xml)
@@ -97,6 +99,8 @@
   template:
     src: bamboo-init.properties
     dest: "{{ bamboo_master_binary_folder }}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
+    owner: "{{ bamboo_master_user }}"
+    group: "{{ bamboo_master_user }}"
   notify: restart bamboo
 
 - name: Set JVM settings
@@ -110,17 +114,6 @@
     - regexp: 'JVM_MAXIMUM_MEMORY="[0-9]+[bkmg]'
       replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
   notify: restart bamboo
-
-- name: Fix permissions on application folder
-  file:
-    path: "{{ item }}"
-    recurse: yes
-    owner: "{{ bamboo_master_user }}"
-    group: "{{ bamboo_master_user }}"
-  changed_when: False
-  with_items:
-    - "{{ bamboo_master_data_folder }}"
-    - "{{ bamboo_master_application_folder }}"
 
 - name: Ensure service is running
   systemd:

@@ -3,7 +3,7 @@ Description=bamboo
 After=syslog.target network.target
 
 [Service]
-Environment=PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin{% for item in bamboo_agent %}{% if item.binary_path is defined %}:{{ item.binary_path }}{% endif %}{% endfor %}
+Environment=PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin{% if bamboo_agent is defined and bamboo_agent.capabilities is defined %}{% for item in bamboo_agent.capabilities %}{% if item.binary_path is defined %}:{{ item.binary_path }}{% endif %}{% endfor %}{% endif %}
 
 
 Environment=HTTP_PROXY={% if http_proxy is defined %}{{ http_proxy.protocol }}://{{ http_proxy.host }}:{{ http_proxy.port }}{% endif %}
