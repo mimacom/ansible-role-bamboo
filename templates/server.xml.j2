@@ -60,10 +60,10 @@
             useBodyEncodingForURI="true"
             URIEncoding="UTF-8"
 
-            {% if bamboo_proxy_fqdn is defined %}
-            proxyName="{{ bamboo_proxy_fqdn }}"
-            proxyPort="443"
-            scheme="https"
+            {% if bamboo_master is defined and bamboo_master.fqdn is defined %}
+            proxyName="{{ bamboo_master.fqdn }}"
+            proxyPort="{{ bamboo_master.port }}"
+            scheme="{% if bamboo_master.https is defined and bamboo_master.https is true %}https{% else %}http{% endif %}"
             {% endif %}
 
             redirectPort="8443"
