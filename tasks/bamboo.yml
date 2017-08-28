@@ -1,7 +1,7 @@
 ---
-- name: Set application directory
+- name: Set binary folder
   set_fact:
-    bamboo_application_directory: "{{ bamboo_root_directory }}/atlassian-bamboo-{{ bamboo_version }}"
+    bamboo_master_binary_folder: "{{ bamboo_master_application_folder }}/atlassian-bamboo-{{ bamboo_master.version }}"
 
 - name: "Install JDK"
   yum:
@@ -10,25 +10,25 @@
 
 - name: Add local user
   user:
-    name: "{{ bamboo_user }}"
+    name: "{{ bamboo_master_user }}"
 
 - name: Create app and data folders
   file:
     name: "{{ item }}"
     state: directory
-    owner: "{{ bamboo_user }}"
-    group: "{{ bamboo_user }}"
+    owner: "{{ bamboo_master_user }}"
+    group: "{{ bamboo_master_user }}"
   with_items:
-    - "{{ bamboo_home_directory }}"
-    - "{{ bamboo_root_directory }}"
+    - "{{ bamboo_master_application_folder }}"
+    - "{{ bamboo_master_data_folder }}"
 
 - name: Check for downgrade
-  fail: msg="Downgrades are not supported. Please set bamboo_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_version }}"
+  fail: msg="Downgrades are not supported. Please set bamboo_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
   when:
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_version | version_compare(ansible_local.bamboo.version, '<')
+    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '<')
 
 - name: Stop when upgrade
   systemd:
@@ -38,13 +38,13 @@
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_version | version_compare(ansible_local.bamboo.version, '>')
+    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '>')
   notify: restart bamboo
 
 - name: Download and unpack bamboo
   unarchive:
-    src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_version }}.tar.gz"
-    dest: "{{ bamboo_root_directory }}"
+    src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_master.version }}.tar.gz"
+    dest: "{{ bamboo_master_application_folder }}"
     remote_src: True
     # keep our modified, newer files instead of overriding from the tarball
     keep_newer: yes
@@ -53,7 +53,7 @@
 - name: Configure bamboo server (server.xml)
   template:
     src: server.xml.j2
-    dest: "{{ bamboo_application_directory }}/conf/server.xml"
+    dest: "{{ bamboo_master_binary_folder }}/conf/server.xml"
   notify: restart bamboo
 
 - name: Copy logrotate script for syslog
@@ -66,7 +66,7 @@
     name: cleanupbamboologs
     special_time: daily
     state: present
-    job: "/usr/bin/find {{ bamboo_application_directory }}/logs/ -name *.log -type f -mtime +7 -exec rm  {} \\;"
+    job: "/usr/bin/find {{ bamboo_master_binary_folder }}/logs/ -name *.log -type f -mtime +7 -exec rm  {} \\;"
 
 - name: Add cronjob for cleanup Bamboo build-dir
   cron:
@@ -75,7 +75,7 @@
     minute: 15
     weekday: 0 # sunday
     state: present
-    job: "/usr/bin/find {{ bamboo_home_directory }}/xml-data/build-dir/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
+    job: "/usr/bin/find {{ bamboo_master_data_folder }}/xml-data/build-dir/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
 
 - name: Add cronjob for cleanup maven repository cache
   cron:
@@ -84,7 +84,7 @@
     minute: 15
     weekday: 0 # sunday
     state: present
-    job: "/usr/bin/find {{ bamboo_home_directory }}/.m2/repository/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
+    job: "/usr/bin/find {{ bamboo_master_data_folder }}/.m2/repository/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
 
 - name: Install bamboo systemd unit script
   template:
@@ -96,30 +96,36 @@
 - name: Set bamboo.home property variable
   template:
     src: bamboo-init.properties
-    dest: "{{ bamboo_application_directory }}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
+    dest: "{{ bamboo_master_binary_folder }}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"
   notify: restart bamboo
 
 - name: Set JVM settings
   replace:
-    dest: "{{ bamboo_application_directory }}/bin/setenv.sh"
+    dest: "{{ bamboo_master_binary_folder }}/bin/setenv.sh"
     regexp: "{{ item.regexp }}"
     replace: "{{ item.replace }}"
   with_items:
     - regexp: 'JVM_MINIMUM_MEMORY="[0-9]+[bkmg]'
-      replace: 'JVM_MINIMUM_MEMORY="{{ bamboo_jvm_heap_min }}'
+      replace: 'JVM_MINIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
     - regexp: 'JVM_MAXIMUM_MEMORY="[0-9]+[bkmg]'
-      replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_jvm_heap_max }}'
+      replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
   notify: restart bamboo
 
 - name: Fix permissions on application folder
   file:
     path: "{{ item }}"
     recurse: yes
-    owner: "{{ bamboo_user }}"
-    group: "{{ bamboo_user }}"
+    owner: "{{ bamboo_master_user }}"
+    group: "{{ bamboo_master_user }}"
   changed_when: False
   with_items:
-    - "{{ bamboo_application_directory }}"
+    - "{{ bamboo_master_data_folder }}"
+    - "{{ bamboo_master_application_folder }}"
+
+- name: Ensure service is running
+  systemd:
+    name: bamboo
+    state: started
 
 - name: Ensure ansible facts folder exists
   file:
