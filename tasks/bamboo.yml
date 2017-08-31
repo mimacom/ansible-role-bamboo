@@ -58,11 +58,6 @@
     dest: "{{ bamboo_master_binary_folder }}/conf/server.xml"
   notify: restart bamboo
 
-- name: Copy logrotate script for syslog
-  copy:
-    src: syslog
-    dest: /etc/logrotate.d/syslog
-
 - name: Add cronjob for cleanup Bamboo logs
   cron:
     name: cleanupbamboologs
