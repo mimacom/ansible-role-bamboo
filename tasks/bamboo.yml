@@ -8,11 +8,20 @@
     name: "java-{{ openjdk_version }}-openjdk"
     state: installed
 
+- name: Create app and data folders
+  file:
+    name: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ bamboo_master_application_folder }}"
+    - "{{ bamboo_master_data_folder }}"
+
 - name: Add local user
   user:
     name: "{{ bamboo_master_user }}"
+    home: "{{ bamboo_master_data_folder }}"
 
-- name: Create app and data folders
+- name: Set permissions for app and data folders
   file:
     name: "{{ item }}"
     state: directory
