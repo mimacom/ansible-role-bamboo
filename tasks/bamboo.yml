@@ -123,6 +123,8 @@
   systemd:
     name: bamboo
     state: started
+    enabled: yes
+    daemon_reload: yes
 
 - name: Ensure ansible facts folder exists
   file:
