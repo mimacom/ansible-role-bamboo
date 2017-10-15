@@ -1,12 +1,5 @@
 ---
 - hosts: all
   become: true
-  vars:
-    bamboo_master:
-      version: "6.1.1"
-      fqdn: "bamboo.mimacom.com"
-      https: True
-      port: 443
   roles:
-    #- mimacom.bamboo
     - role_under_test

@@ -3,7 +3,7 @@ services: docker
 
 env:
   - distro: centos7
-#  - distro: centos6
+  - distro: centos6
 #  - distro: fedora24
 #  - distro: ubuntu1604
 #  - distro: ubuntu1404

@@ -12,9 +12,18 @@ None.
 ## Role Variables
 
 
-    # Set Bamboo version
     bamboo_master:
+      # Specify Bamboo version to install
       version: 6.2.1
+
+      # Set tomcat proxy FQDN
+      fqdn: ""
+
+      # Set tomcat proxy protocol
+      https: False
+
+      # Set tomcat proxy port
+      port: ""
 
 ## Dependencies
 
@@ -31,9 +40,6 @@ HTTPS connection (proxy settings).
         - role: mimacom.bamboo
           bamboo_master:
             version: 6.2.1
-            fqdn: "bamboo.example.invalid"
-            https: True
-            port: 443
 
 ## License
 
