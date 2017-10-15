@@ -2,7 +2,8 @@
 
 [![Build Status](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)](https://travis-ci.org/mimacom/ansible-role-bamboo)
 
-Installs Atlassian Bamboo server for CentOS linux servers.
+Installs Atlassian Bamboo server for CentOS linux servers. This role
+will install OpenJDK 8 aswell.
 
 ## Requirements
 
@@ -24,6 +25,23 @@ None.
 
       # Set tomcat proxy port
       port: ""
+
+    # Check Bamboo's supported platforms and adjust this variable if
+    # necessary
+    openjdk_version: 1.8.0
+
+    # Service user
+    bamboo_master_user: bamboo
+
+    # Application / binary folder
+    bamboo_master_application_folder: "/opt/atlassian/bamboo"
+
+    # Bamboo data folder
+    bamboo_master_data_folder: "/var/atlassian/application-data/bamboo"
+
+    # JVM max and min memory space
+    bamboo_master_jvm_memory: 1g
+
 
 ## Dependencies
 
