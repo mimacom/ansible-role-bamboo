@@ -41,6 +41,18 @@ HTTPS connection (proxy settings).
           bamboo_master:
             version: 6.2.1
 
+## Upgrade Bamboo
+
+To upgrade Bamboo, simply change the version variable to a higher
+version number. Old binary versions will be preserved but not further
+used. Delete it by yourself.
+
+Please do a proper backup prior upgrading, as the Bamboo data will not
+work with older versions. If you set a lower version than installed, the
+role will fail.
+
+The current version is saved as ansible fact in /etc/ansible/facts.d/
+
 ## License
 
 Apache License 2.0
