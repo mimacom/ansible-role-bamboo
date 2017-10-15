@@ -22,8 +22,8 @@ script:
   # Run tests.
   - ${PWD}/tests/test.sh
 
-  # Ensure Java is installed.
-  #- 'docker exec --tty ${container_id} env TERM=xterm which java'
+  # Check if bamboo is responding
+  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
