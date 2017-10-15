@@ -23,7 +23,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if bamboo is responding
-  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
+  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8086/'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
