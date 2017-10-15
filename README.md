@@ -8,7 +8,9 @@ Installs Atlassian Bamboo server for CentOS linux serves.
 
 None.
 
-## Role Variables
+
+## Role Variables
+
 
     # Set Bamboo version
     bamboo_master:
@@ -39,4 +41,4 @@ Apache License 2.0
 
 ## Author Information
 
-This role was created by [Remo Wenger](remowenger.ch).
+This role was created by [Remo Wenger](http://www.remowenger.ch).
