@@ -22,7 +22,7 @@ None.
 
 ## Example Playbook
 
-This installs Bamboo and tells tomcat to except a specific vHost and an
+This installs Bamboo and tells tomcat to expect a specific vHost and an
 HTTPS connection (proxy settings).
 
     - hosts: servers
