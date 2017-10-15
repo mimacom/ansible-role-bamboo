@@ -1,24 +1,42 @@
-[![Travis](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)]()
+# Ansible Role: bamboo
 
-bamboo
-============
+[![Build Status](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)](https://travis-ci.org/mimacom/ansible-role-bamboo)
 
-This role will install a Atlassian Bamboo server.
+Installs Atlassian Bamboo server for CentOS linux serves.
 
-Requirements
-------------
+## Requirements
 
-You should have a valid licenses for it. This role is tested on CentOS 7 only.
+None.
 
-Role Variables
---------------
+## Role Variables
 
-These role variables are mandatory:
-```yaml
-bamboo_version: x.y.z # Full version number to install or upgrade to
-```
+    # Set Bamboo version
+    bamboo_master:
+      version: 6.2.1
 
-Dependencies
-------------
+## Dependencies
 
-None
+None.
+
+## Example Playbook
+
+This installs Bamboo and tells tomcat to except a specific vHost and an
+HTTPS connection (proxy settings).
+
+    - hosts: servers
+      become: yes
+      roles:
+        - role: mimacom.bamboo
+          bamboo_master:
+            version: 6.2.1
+            fqdn: "bamboo.example.invalid"
+            https: True
+            port: 443
+
+## License
+
+Apache License 2.0
+
+## Author Information
+
+This role was created by [Remo Wenger](remowenger.ch).
