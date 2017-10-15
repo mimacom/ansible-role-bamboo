@@ -67,6 +67,11 @@
     dest: "{{ bamboo_master_binary_folder }}/conf/server.xml"
   notify: restart bamboo
 
+- name: Install crontabs
+  yum:
+    name: crontabs
+    state: installed
+
 - name: Add cronjob for cleanup Bamboo logs
   cron:
     name: cleanupbamboologs
