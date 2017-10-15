@@ -1,3 +1,5 @@
+[![Travis](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)]()
+
 bamboo
 ============
 
