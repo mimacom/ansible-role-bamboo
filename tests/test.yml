@@ -8,4 +8,5 @@
       https: True
       port: 443
   roles:
-    - mimacom.bamboo
+    #- mimacom.bamboo
+    - role_under_test
