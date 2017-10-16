@@ -66,7 +66,7 @@
             proxyName="{{ bamboo_master.fqdn }}"
             {% endif %}
 
-            {% if bamboo_master.post is defined %}
+            {% if bamboo_master.port is defined %}
             proxyPort="{{ bamboo_master.port }}"
             {% endif %}
 
