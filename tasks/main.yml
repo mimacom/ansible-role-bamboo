@@ -1,3 +1,17 @@
 ---
-- include: bamboo.yml
+- include_tasks: jdk-{{ ansible_os_family }}.yml
+  when: bamboo_include_jdk
+  tags:
+    - bamboo_jdk
+    - bamboo
+- include_tasks: bamboo.yml
   tags: bamboo
+- include_tasks: cron.yml
+  when: bamboo_include_cron
+  tags:
+    - bamboo
+    - bamboo_cron
+- include_tasks: fact.yml
+  tags:
+    - bamboo
+    - bamboo_facts

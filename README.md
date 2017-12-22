@@ -42,6 +42,12 @@ None.
     # JVM max and min memory space
     bamboo_master_jvm_memory: 1g
 
+    # Set False to disable inclusion of cron package and cron tasks
+    bamboo_include_cron: True
+
+    # Set False to disable OpenJDK inclusion
+    bamboo_include_jdk: True
+
 
 ## Dependencies
 
