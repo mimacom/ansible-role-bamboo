@@ -15,7 +15,7 @@ None.
 
     bamboo_master:
       # Specify Bamboo version to install
-      version: 6.2.1
+      version: 6.4.0
 
       # Set tomcat proxy FQDN
       fqdn: ""
@@ -56,8 +56,6 @@ HTTPS connection (proxy settings).
       become: yes
       roles:
         - role: mimacom.bamboo
-          bamboo_master:
-            version: 6.2.1
 
 ## Upgrade Bamboo
 

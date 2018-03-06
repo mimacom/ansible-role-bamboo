@@ -7,4 +7,4 @@ bamboo_master_jvm_memory: 1g
 openjdk_version: 1.8.0
 
 bamboo_master:
-  version: 6.2.1
+  version: 6.4.0
