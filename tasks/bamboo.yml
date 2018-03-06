@@ -6,7 +6,7 @@
 - name: Add local user
   user:
     name: "{{ bamboo_master_user }}"
-    home: "{{ bamboo_master_data_folder }}"
+    createhome: no
 
 - name: Create app and data folders
   file:
@@ -17,6 +17,11 @@
   with_items:
     - "{{ bamboo_master_application_folder }}"
     - "{{ bamboo_master_data_folder }}"
+
+- name: Set local user home directory
+  user:
+    name: "{{ bamboo_master_user }}"
+    home: "{{ bamboo_master_data_folder }}"
 
 - name: Check for downgrade
   fail: msg="Downgrades are not supported. Please set bamboo_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
