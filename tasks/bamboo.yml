@@ -32,7 +32,7 @@
     - "{{ bamboo_master_data_folder }}"
 
 - name: Check for downgrade
-  fail: msg="Downgrades are not supported. Please set bamboo_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
+  fail: msg="Downgrades are not supported. Please set bamboo_master.version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
   when:
     - ansible_local is defined
     - ansible_local.bamboo is defined
