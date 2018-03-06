@@ -15,7 +15,7 @@ Environment=HTTPS_PROXY={% if http_proxy is defined %}{{ http_proxy.protocol }}:
 Environment=NO_PROXY={% if http_proxy is defined %}{{ http_proxy.exception | default('') | join(",") }}{% endif %}
 
 
-{% if bamboo_hipchat_url is defined % }Environment="CATALINA_OPTS=-Dhipchat.api.url={{ bamboo_hipchat_url }}"{% endif %}
+{% if bamboo_hipchat_url is defined %}Environment="CATALINA_OPTS=-Dhipchat.api.url={{ bamboo_hipchat_url }}"{% endif %}
 
 
 Type=forking
