@@ -97,8 +97,7 @@
       replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
   notify: restart bamboo
 
-- name: Ensure service is running and enabled
+- name: Ensure service is started at boot
   service:
     name: bamboo
-    state: started
     enabled: yes
