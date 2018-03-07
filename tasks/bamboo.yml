@@ -31,19 +31,7 @@
     - ansible_local.bamboo.version is defined
     - bamboo_master.version | version_compare(ansible_local.bamboo.version, '<')
 
-- name: Stop when upgrade (systemd)
-  systemd:
-    name: bamboo
-    state: stopped
-  when:
-    - ansible_service_mgr == 'systemd'
-    - ansible_local is defined
-    - ansible_local.bamboo is defined
-    - ansible_local.bamboo.version is defined
-    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '>')
-  notify: restart bamboo
-
-- name: Stop when upgrade (sysv)
+- name: Stop when upgrade
   service:
     name: bamboo
     state: stopped
@@ -86,7 +74,7 @@
     src: bamboo.init.j2
     dest: /etc/init.d/bamboo
     mode: 0744
-  when: ansible_service_mgr == 'service'
+  when: ansible_service_mgr != 'systemd'
   notify: restart bamboo
 
 - name: Set bamboo.home property variable
@@ -109,17 +97,8 @@
       replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
   notify: restart bamboo
 
-- name: Ensure service is running (systemd)
-  systemd:
-    name: bamboo
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  when: ansible_service_mgr == 'systemd'
-
-- name: Ensure service is running (sysv)
+- name: Ensure service is running and enabled
   service:
     name: bamboo
     state: started
     enabled: yes
-  when: ansible_service_mgr == 'service'
