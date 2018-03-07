@@ -3,12 +3,9 @@ services: docker
 
 env:
   - distro: centos7
-#  - distro: centos6
-#  - distro: fedora24
-#  - distro: ubuntu1604
+    test_availability: "curl http://localhost:8085/"
   - distro: ubuntu1404
-#  - distro: ubuntu1204
-#  - distro: debian8
+    test_availability: "wget -qO- http://localhost:8085/ > /dev/null"
 
 script:
   # Configure test script so we can run extra tests after playbook is run.
@@ -23,7 +20,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if bamboo is responding
-  - 'docker exec --tty ${container_id} env TERM=xterm wget -qO- http://localhost:8085/ > /dev/null'
+  - 'docker exec --tty ${container_id} env TERM=xterm ${test_availability}'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
