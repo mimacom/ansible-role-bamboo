@@ -2,6 +2,6 @@
 - hosts: all
   become: true
   vars:
-    bamboo_hipchat_url: https://hipchat.domain.com/
+    bamboo_master_hipchat_url: https://hipchat.domain.com/
   roles:
     - role_under_test
