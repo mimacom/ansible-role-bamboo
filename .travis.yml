@@ -21,8 +21,12 @@ script:
 
   # Install curl for testing purposes
   - 'docker exec --tty ${container_id} env TERM=xterm ${pkg_manager} install -y curl'
+
   # Check if bamboo is responding
   - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
+
+  # Check if HipChat integration is activated
+  - 'ps -ef | grep bamboo | grep "-Dhipchat.api.url=https://hipchat.domain.com/"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
