@@ -30,6 +30,7 @@ case "$1" in
     echo "Starting $APP"
     export BAMBOO_HOME=${BAMBOO_HOME}
     export CATALINA_PID=${CATALINA_PID}
+    export CATALINA_OPTS=${CATALINA_OPTS}
     start-stop-daemon --start --chuid $USER --pidfile $CATALINA_PID --background --exec "$BASE/bin/catalina.sh" -- start
     ;;
   # Stop command
