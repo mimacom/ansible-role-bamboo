@@ -3,9 +3,9 @@ services: docker
 
 env:
   - distro: centos7
-    install_curl: "yum install -y curl"
+    pkg_manager: 'yum'
   - distro: ubuntu1404
-    install_curl: "apt install -yq curl"
+    pkg_manager: 'apt'
 
 script:
   # Configure test script so we can run extra tests after playbook is run.
@@ -20,7 +20,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Install curl for testing purposes
-  - 'docker exec --tty ${container_id} env TERM=xterm ${install_curl}'
+  - 'docker exec --tty ${container_id} env TERM=xterm ${pkg_manager} install -y curl'
   # Check if bamboo is responding
   - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
 
