@@ -5,3 +5,11 @@
     state: restarted
     enabled: yes
     daemon_reload: yes
+  when: ansible_service_mgr == 'systemd'
+
+- name: restart bamboo
+  service:
+    name: bamboo
+    state: restarted
+    enabled: yes
+  when: ansible_service_mgr == 'service'

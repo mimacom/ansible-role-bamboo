@@ -6,7 +6,7 @@ env:
 #  - distro: centos6
 #  - distro: fedora24
 #  - distro: ubuntu1604
-#  - distro: ubuntu1404
+  - distro: ubuntu1404
 #  - distro: ubuntu1204
 #  - distro: debian8
 

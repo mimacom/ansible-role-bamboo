@@ -1,0 +1,37 @@
+---
+- name: Install crontabs (RedHat)
+  yum:
+    name: crontabs
+    state: installed
+  when: ansible_os_family == 'RedHat'
+
+- name: Install crontabs (Debian)
+  apt:
+    name: cron
+    state: installed
+  when: ansible_os_family == 'Debian'
+
+- name: Add cronjob for cleanup Bamboo logs
+  cron:
+    name: cleanupbamboologs
+    special_time: daily
+    state: present
+    job: "/usr/bin/find {{ bamboo_master_binary_folder }}/logs/ -name *.log -type f -mtime +7 -exec rm  {} \\;"
+
+- name: Add cronjob for cleanup Bamboo build-dir
+  cron:
+    name: cleanupbamboobuilddir
+    hour: 03
+    minute: 15
+    weekday: 0 # sunday
+    state: present
+    job: "/usr/bin/find {{ bamboo_master_data_folder }}/xml-data/build-dir/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
+
+- name: Add cronjob for cleanup maven repository cache
+  cron:
+    name: cleanupbamboomavenrepo
+    hour: 03
+    minute: 15
+    weekday: 0 # sunday
+    state: present
+    job: "/usr/bin/find {{ bamboo_master_data_folder }}/.m2/repository/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"

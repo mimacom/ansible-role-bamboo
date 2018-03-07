@@ -3,6 +3,8 @@ bamboo_master_user: bamboo
 bamboo_master_application_folder: "/opt/atlassian/bamboo"
 bamboo_master_data_folder: "/var/atlassian/application-data/bamboo"
 bamboo_master_jvm_memory: 1g
+bamboo_include_cron: True
+bamboo_include_jdk: True
 
 openjdk_version: 1.8.0
 

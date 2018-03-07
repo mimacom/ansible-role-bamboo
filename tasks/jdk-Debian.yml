@@ -1,0 +1,14 @@
+---
+- name: add OpenJDK PPA for Ubuntu 14.04 and lower
+  apt_repository:
+    repo: ppa:openjdk-r/ppa
+
+- name: install OpenJDK
+  apt:
+    name: openjdk-{{ openjdk_version.split('.')[-2] }}-jdk
+    cache_valid_time: 1800
+
+- name: set default java to OpenJDK
+  alternatives:
+    name: java
+    path: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java

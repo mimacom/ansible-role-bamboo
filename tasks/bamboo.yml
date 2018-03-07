@@ -3,25 +3,12 @@
   set_fact:
     bamboo_master_binary_folder: "{{ bamboo_master_application_folder }}/atlassian-bamboo-{{ bamboo_master.version }}"
 
-- name: "Install JDK"
-  yum:
-    name: "java-{{ openjdk_version }}-openjdk"
-    state: installed
-
-- name: Create app and data folders
-  file:
-    name: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ bamboo_master_application_folder }}"
-    - "{{ bamboo_master_data_folder }}"
-
 - name: Add local user
   user:
     name: "{{ bamboo_master_user }}"
-    home: "{{ bamboo_master_data_folder }}"
+    createhome: no
 
-- name: Set permissions for app and data folders
+- name: Create app and data folders
   file:
     name: "{{ item }}"
     state: directory
@@ -31,6 +18,11 @@
     - "{{ bamboo_master_application_folder }}"
     - "{{ bamboo_master_data_folder }}"
 
+- name: Set local user home directory
+  user:
+    name: "{{ bamboo_master_user }}"
+    home: "{{ bamboo_master_data_folder }}"
+
 - name: Check for downgrade
   fail: msg="Downgrades are not supported. Please set bamboo_master.version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
   when:
@@ -39,11 +31,24 @@
     - ansible_local.bamboo.version is defined
     - bamboo_master.version | version_compare(ansible_local.bamboo.version, '<')
 
-- name: Stop when upgrade
+- name: Stop when upgrade (systemd)
   systemd:
     name: bamboo
     state: stopped
   when:
+    - ansible_service_mgr == 'systemd'
+    - ansible_local is defined
+    - ansible_local.bamboo is defined
+    - ansible_local.bamboo.version is defined
+    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '>')
+  notify: restart bamboo
+
+- name: Stop when upgrade (sysv)
+  service:
+    name: bamboo
+    state: stopped
+  when:
+    - ansible_service_mgr == 'service'
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
@@ -59,6 +64,7 @@
     keep_newer: yes
     owner: "{{ bamboo_master_user }}"
     group: "{{ bamboo_master_user }}"
+    creates: "{{ bamboo_master_binary_folder }}"
   changed_when: False
 
 - name: Configure bamboo server (server.xml)
@@ -67,41 +73,20 @@
     dest: "{{ bamboo_master_binary_folder }}/conf/server.xml"
   notify: restart bamboo
 
-- name: Install crontabs
-  yum:
-    name: crontabs
-    state: installed
-
-- name: Add cronjob for cleanup Bamboo logs
-  cron:
-    name: cleanupbamboologs
-    special_time: daily
-    state: present
-    job: "/usr/bin/find {{ bamboo_master_binary_folder }}/logs/ -name *.log -type f -mtime +7 -exec rm  {} \\;"
-
-- name: Add cronjob for cleanup Bamboo build-dir
-  cron:
-    name: cleanupbamboobuilddir
-    hour: 03
-    minute: 15
-    weekday: 0 # sunday
-    state: present
-    job: "/usr/bin/find {{ bamboo_master_data_folder }}/xml-data/build-dir/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
-
-- name: Add cronjob for cleanup maven repository cache
-  cron:
-    name: cleanupbamboomavenrepo
-    hour: 03
-    minute: 15
-    weekday: 0 # sunday
-    state: present
-    job: "/usr/bin/find {{ bamboo_master_data_folder }}/.m2/repository/ -maxdepth 1 -type d -mtime +1 -exec rm -rf {} \\;"
-
 - name: Install bamboo systemd unit script
   template:
     src: bamboo.service.j2
     dest: /etc/systemd/system/bamboo.service
     mode: 0744
+  when: ansible_service_mgr == 'systemd'
+  notify: restart bamboo
+
+- name: Install bamboo sysv init script
+  template:
+    src: bamboo.init.j2
+    dest: /etc/init.d/bamboo
+    mode: 0744
+  when: ansible_service_mgr == 'service'
   notify: restart bamboo
 
 - name: Set bamboo.home property variable
@@ -124,27 +109,17 @@
       replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
   notify: restart bamboo
 
-- name: Ensure service is running
+- name: Ensure service is running (systemd)
   systemd:
     name: bamboo
     state: started
     enabled: yes
     daemon_reload: yes
+  when: ansible_service_mgr == 'systemd'
 
-- name: Ensure ansible facts folder exists
-  file:
-    name: /etc/ansible/facts.d/
-    state: directory
-    recurse: yes
-
-- name: Ensure bamboo facts exists
-  file:
-    name: /etc/ansible/facts.d/bamboo.fact
-    state: touch
-  changed_when: False
-
-- name: Update bamboo facts
-  template:
-    src: bamboo.fact.j2
-    dest: /etc/ansible/facts.d/bamboo.fact
-  notify: restart bamboo
+- name: Ensure service is running (sysv)
+  service:
+    name: bamboo
+    state: started
+    enabled: yes
+  when: ansible_service_mgr == 'service'
