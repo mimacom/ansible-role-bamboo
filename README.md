@@ -42,6 +42,9 @@ None.
     # JVM max and min memory space
     bamboo_master_jvm_memory: 1g
 
+    # Set URL for HipChat integration (example: https://hipchat.domain.com/)
+    bamboo_master_hipchat_url: ""
+
     # Set False to disable inclusion of cron package and cron tasks
     bamboo_include_cron: True
 
