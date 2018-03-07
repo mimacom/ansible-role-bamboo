@@ -30,3 +30,6 @@ script:
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  hipchat:
+    rooms:
+      secure: a2zM+oPkJdbAJNjYPdB2un3sA1Vts70q0aaW25LLsttI0hZMGeyw9AQg1uWCq59EIHkTK3H8h+JsrwfwgCCewiPYetIk6F7T7Em+mqcs9tuAPKY0wsqbPu/UP5Rlt//yY6RlM1nnjIbiFJCE8laQmCHyyxdLm7Unqsutm2LnBU59BYoydGezmNBTBAdLU5NRZpiPn+8QZWkDTcooEb843MvFBC626CA3eNKFrh/x4/GcIf7HNNtXqy0//RUzG9tTOzKiLZh1YjLjyewUBpuSlqg7UoNKPQMsKStQQ1w7YGPdNr3b8kwcRFmBFyqRU4vspTGxDe4dfXIXL+gFX66Zn8Rt68z3+ncrZrA6U3RvVZFqU6CaiL8+fiUKJljEyh/Wxj2AB1NDp7DUV3U4IwmRAr6zmTZUgCgyBS+2HT5war4qdRWK74qlHpqYgcernELibbVAI7iQ9tLqLi8G8rCyOZSj8nb3GBgtXWphkB1P5G3k/IQjS/sBuWDCwxMn1NqITDlZdI5l9df+jtjJ/VvlzrQh/NFz08FH1Aqx7HKNQPuVdE+4tyoGYsr36TclH8GUC0b04BgYlmlPXRIZ5o9NuwQGRqYZHzS26YVvAuW4md2nZhHl81eA6VUIBi+PuOn/gHwS550p+o8Rfp0/XvVLLWjKSrW+sVXQWuCME7GUJCs=
