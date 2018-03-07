@@ -1,6 +1,6 @@
 # Ansible Role: bamboo
 
-[![Build Status](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)](https://travis-ci.org/mimacom/ansible-role-bamboo)
+[![Build Status](https://travis-ci.org/mimacom/ansible-role-bamboo.svg?branch=master)](https://travis-ci.org/mimacom/ansible-role-bamboo)
 
 Installs Atlassian Bamboo on Linux servers. This role will install OpenJDK 8 by
 default.
