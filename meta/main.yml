@@ -31,6 +31,7 @@ galaxy_info:
     - atlassian
     - build
     - toolchain
+    - continuous integration
 
 dependencies: []
   # List your role dependencies here, one per line.
