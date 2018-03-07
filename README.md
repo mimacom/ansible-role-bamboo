@@ -2,8 +2,8 @@
 
 [![Build Status](https://img.shields.io/travis/mimacom/ansible-role-bamboo.svg)](https://travis-ci.org/mimacom/ansible-role-bamboo)
 
-Installs Atlassian Bamboo server for CentOS linux servers. This role
-will install OpenJDK 8 aswell.
+Installs Atlassian Bamboo on Linux servers. This role will install OpenJDK 8 by
+default.
 
 ## Requirements
 
