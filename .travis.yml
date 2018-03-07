@@ -23,10 +23,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check if bamboo is responding
-  - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
-
-  # Check if HipChat URL is assigned
-  - 'docker exec --tty ${container_id} env TERM=xterm grep "hipchat.domain.com" /etc/systemd/system/bamboo.service'
+  - 'docker exec --tty ${container_id} env TERM=xterm wget -qO- http://localhost:8085/ > /dev/null'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
