@@ -54,34 +54,11 @@
     creates: "{{ bamboo_master_binary_folder }}"
   changed_when: False
 
-- name: Set tomcat connector proxyName in server.xml
-  xml:
-    path: "{{ bamboo_master_binary_folder }}/conf/server.xml"
-    xpath: /Server/Service/Connector
-    attribute: proxyName
-    value: "{{ bamboo_master_fqdn }}"
-  when: bamboo_master_fqdn is defined
-  notify: restart bamboo
-
-- name: Set tomcat connector proxyPort server.xml
-  xml:
-    path: "{{ bamboo_master_binary_folder }}/conf/server.xml"
-    xpath: /Server/Service/Connector
-    attribute: proxyPort
-    value: "{{ bamboo_master_port }}"
-  when: bamboo_master_port is defined
-  notify: restart bamboo
-
-- name: Set tomcat connector scheme server.xml
-  xml:
-    path: "{{ bamboo_master_binary_folder }}/conf/server.xml"
-    xpath: /Server/Service/Connector
-    attribute: scheme
-    value: "https"
-  when:
-    - bamboo_master_https is defined
-    - bamboo_master_https
-  notify: restart bamboo
+- name: Include tomcat
+  include_tasks: tomcat.yml
+  when: bamboo_master_fqdn is defined or
+        bamboo_master_port is defined or
+        bamboo_master_https is defined
 
 - name: Install bamboo systemd unit script
   template:
