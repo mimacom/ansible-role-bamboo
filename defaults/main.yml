@@ -1,17 +1,14 @@
 ---
-bamboo_master:
-  version: 6.4.0
-  fqdn: ""
-  https: False
-  port: ""
+bamboo_master_version: 6.4.0
+bamboo_master_fqdn: ""
+bamboo_master_https: False
+bamboo_master_port: ""
 
-bamboo_include_jdk: True
-openjdk_version: 1.8.0
+bamboo_master_include_jdk: True
+bamboo_master_openjdk_version: 1.8.0
 
 bamboo_master_user: bamboo
 bamboo_master_application_folder: "/opt/atlassian/bamboo"
 bamboo_master_data_folder: "/var/atlassian/application-data/bamboo"
 bamboo_master_jvm_memory: 1g
 bamboo_master_hipchat_url: ""
-
-bamboo_include_cron: True

@@ -14,27 +14,27 @@ None.
 Available variables are listed below, along with default values (see
 `defaults/main.yml`):
 
-    bamboo_master.version: 6.4.0
+    bamboo_master_version: 6.4.0
 
 Specify Bamboo version to install
 
-    bamboo_master.fqdn: ""
+    bamboo_master_fqdn: ""
 
 Set tomcat proxy FQDN
 
-    bamboo_master.https: False
+    bamboo_master_https: False
 
 Set tomcat proxy protocol
 
-    bamboo_master.port: ""
+    bamboo_master_port: ""
 
 Set tomcat proxy port
 
-    bamboo_include_jdk: True
+    bamboo_master_include_jdk: True
 
 Set False to disable OpenJDK installation.
 
-    openjdk_version: 1.8.0
+    bamboo_master_openjdk_version: 1.8.0
 
 Which OpenJDK to install for running Bamboo. Check Bamboo's supported platforms and adjust this variable if necessary.
 
@@ -57,10 +57,6 @@ Java VM heap size
     bamboo_master_hipchat_url: ""
 
 Set URL for HipChat integration (example: https://hipchat.domain.com/)
-
-    bamboo_include_cron: True
-
-Set False to disable inclusion of cron package and cron tasks
 
 
 ## Dependencies

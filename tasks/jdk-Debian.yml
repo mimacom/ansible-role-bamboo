@@ -5,7 +5,7 @@
 
 - name: install OpenJDK
   apt:
-    name: openjdk-{{ openjdk_version.split('.')[-2] }}-jdk
+    name: openjdk-{{ bamboo_master_openjdk_version.split('.')[-2] }}-jdk
     cache_valid_time: 1800
 
 - name: set default java to OpenJDK

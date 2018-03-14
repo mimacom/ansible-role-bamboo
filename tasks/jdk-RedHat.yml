@@ -1,6 +1,6 @@
 ---
 - name: "Install JDK"
   yum:
-    name: "java-{{ openjdk_version }}-openjdk"
+    name: "java-{{ bamboo_master_openjdk_version }}-openjdk"
     state: installed
   when: ansible_os_family == 'RedHat'

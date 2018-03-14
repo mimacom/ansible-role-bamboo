@@ -1,7 +1,7 @@
 ---
 - name: Set binary folder
   set_fact:
-    bamboo_master_binary_folder: "{{ bamboo_master_application_folder }}/atlassian-bamboo-{{ bamboo_master.version }}"
+    bamboo_master_binary_folder: "{{ bamboo_master_application_folder }}/atlassian-bamboo-{{ bamboo_master_version }}"
 
 - name: Add local user
   user:
@@ -24,12 +24,12 @@
     home: "{{ bamboo_master_data_folder }}"
 
 - name: Check for downgrade
-  fail: msg="Downgrades are not supported. Please set bamboo_master.version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master.version }}"
+  fail: msg="Downgrades are not supported. Please set bamboo_master_version to higher or equal to {{ ansible_local.bamboo.version }}. Current value is {{ bamboo_master_version }}"
   when:
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '<')
+    - bamboo_master_version | version_compare(ansible_local.bamboo.version, '<')
 
 - name: Stop when upgrade
   service:
@@ -40,12 +40,12 @@
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_master.version | version_compare(ansible_local.bamboo.version, '>')
+    - bamboo_master_version | version_compare(ansible_local.bamboo.version, '>')
   notify: restart bamboo
 
 - name: Download and unpack bamboo
   unarchive:
-    src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_master.version }}.tar.gz"
+    src: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{ bamboo_master_version }}.tar.gz"
     dest: "{{ bamboo_master_application_folder }}"
     remote_src: True
     # keep our modified, newer files instead of overriding from the tarball
@@ -60,10 +60,8 @@
     path: "{{ bamboo_master_binary_folder }}/conf/server.xml"
     xpath: /Server/Service/Connector
     attribute: proxyName
-    value: "{{ bamboo_master.fqdn }}"
-  when:
-    - bamboo_master is defined
-    - bamboo_master.fqdn is defined
+    value: "{{ bamboo_master_fqdn }}"
+  when: bamboo_master_fqdn is defined
   notify: restart bamboo
 
 - name: Set tomcat connector proxyPort server.xml
@@ -71,10 +69,8 @@
     path: "{{ bamboo_master_binary_folder }}/conf/server.xml"
     xpath: /Server/Service/Connector
     attribute: proxyPort
-    value: "{{ bamboo_master.port }}"
-  when:
-    - bamboo_master is defined
-    - bamboo_master.port is defined
+    value: "{{ bamboo_master_port }}"
+  when: bamboo_master_port is defined
   notify: restart bamboo
 
 - name: Set tomcat connector scheme server.xml
@@ -84,9 +80,8 @@
     attribute: scheme
     value: "https"
   when:
-    - bamboo_master is defined
-    - bamboo_master.https is defined
-    - bamboo_master.https
+    - bamboo_master_https is defined
+    - bamboo_master_https
   notify: restart bamboo
 
 - name: Install bamboo systemd unit script
