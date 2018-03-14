@@ -2,8 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mimacom/ansible-role-bamboo.svg?branch=master)](https://travis-ci.org/mimacom/ansible-role-bamboo)
 
-Installs Atlassian Bamboo on Linux servers. This role will install OpenJDK 8 by
-default.
+Installs Atlassian Bamboo on Linux servers. This role will install OpenJDK by default.
 
 ## Requirements
 
@@ -12,44 +11,56 @@ None.
 
 ## Role Variables
 
+Available variables are listed below, along with default values (see
+`defaults/main.yml`):
 
-    bamboo_master:
-      # Specify Bamboo version to install
-      version: 6.4.0
+    bamboo_master.version: 6.4.0
 
-      # Set tomcat proxy FQDN
-      fqdn: ""
+Specify Bamboo version to install
 
-      # Set tomcat proxy protocol
-      https: False
+    bamboo_master.fqdn: ""
 
-      # Set tomcat proxy port
-      port: ""
+Set tomcat proxy FQDN
 
-    # Check Bamboo's supported platforms and adjust this variable if
-    # necessary
+    bamboo_master.https: False
+
+Set tomcat proxy protocol
+
+    bamboo_master.port: ""
+
+Set tomcat proxy port
+
+    bamboo_include_jdk: True
+
+Set False to disable OpenJDK installation.
+
     openjdk_version: 1.8.0
 
-    # Service user
+Which OpenJDK to install for running Bamboo. Check Bamboo's supported platforms and adjust this variable if necessary.
+
     bamboo_master_user: bamboo
 
-    # Application / binary folder
+Name of the user under which the service will run
+
     bamboo_master_application_folder: "/opt/atlassian/bamboo"
 
-    # Bamboo data folder
+Path where to install the application
+
     bamboo_master_data_folder: "/var/atlassian/application-data/bamboo"
 
-    # JVM max and min memory space
+Path where application data will be stored
+
     bamboo_master_jvm_memory: 1g
 
-    # Set URL for HipChat integration (example: https://hipchat.domain.com/)
+Java VM heap size
+
     bamboo_master_hipchat_url: ""
 
-    # Set False to disable inclusion of cron package and cron tasks
+Set URL for HipChat integration (example: https://hipchat.domain.com/)
+
     bamboo_include_cron: True
 
-    # Set False to disable OpenJDK inclusion
-    bamboo_include_jdk: True
+Set False to disable inclusion of cron package and cron tasks
 
 
 ## Dependencies
@@ -70,7 +81,7 @@ HTTPS connection (proxy settings).
 
 To upgrade Bamboo, simply change the version variable to a higher
 version number. Old binary versions will be preserved but not further
-used. Delete it by yourself.
+used. You should delete them manually.
 
 Please do a proper backup prior upgrading, as the Bamboo data will not
 work with older versions. If you set a lower version than installed, the
