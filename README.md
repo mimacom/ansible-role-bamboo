@@ -58,6 +58,13 @@ Java VM heap size
 
 Set URL for HipChat integration (example: https://hipchat.domain.com/)
 
+## Deprecation warning
+
+The following vars are deprecated and will be removed
+in future releases. Please consult README.
+  - `bamboo_master`
+  - `bamboo_include_jdk`
+  - `openjdk_version`
 
 ## Dependencies
 
