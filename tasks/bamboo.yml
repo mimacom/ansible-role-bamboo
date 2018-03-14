@@ -36,7 +36,6 @@
     name: bamboo
     state: stopped
   when:
-    - ansible_service_mgr == 'service'
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
