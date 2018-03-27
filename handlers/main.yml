@@ -1,5 +1,13 @@
 ---
 - name: restart bamboo
+  systemd:
+    name: bamboo
+    state: restarted
+    daemon_reload: yes
+  when: ansible_service_mgr == 'systemd'
+
+- name: restart bamboo
   service:
     name: bamboo
     state: restarted
+  when: ansible_service_mgr != 'service'
