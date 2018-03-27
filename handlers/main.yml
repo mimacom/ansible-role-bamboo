@@ -10,4 +10,4 @@
   service:
     name: bamboo
     state: restarted
-  when: ansible_service_mgr != 'service'
+  when: ansible_service_mgr != 'systemd'
