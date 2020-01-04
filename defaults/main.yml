@@ -1,5 +1,5 @@
 ---
-bamboo_master_version: 6.4.0
+bamboo_master_version: 6.10.4
 bamboo_master_fqdn: ""
 bamboo_master_https: False
 bamboo_master_port: ""

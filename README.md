@@ -14,7 +14,7 @@ None.
 Available variables are listed below, along with default values (see
 `defaults/main.yml`):
 
-    bamboo_master_version: 6.4.0
+    bamboo_master_version: 6.10.4
 
 Specify Bamboo version to install
 
