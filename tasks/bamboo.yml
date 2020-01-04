@@ -30,7 +30,7 @@
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_master_version | version_compare(ansible_local.bamboo.version, '<')
+    - bamboo_master_version | version(ansible_local.bamboo.version, '<')
 
 - name: Stop when upgrade
   service:
@@ -40,7 +40,7 @@
     - ansible_local is defined
     - ansible_local.bamboo is defined
     - ansible_local.bamboo.version is defined
-    - bamboo_master_version | version_compare(ansible_local.bamboo.version, '>')
+    - bamboo_master_version | version(ansible_local.bamboo.version, '>')
   notify: restart bamboo
 
 - name: Download and unpack bamboo
