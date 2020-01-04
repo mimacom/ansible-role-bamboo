@@ -19,6 +19,9 @@ script:
   # Run tests.
   - ${PWD}/tests/test.sh
 
+  # Just show output of processes
+  - 'docker exec --tty ${container_id} env TERM=xterm ps aux'
+
   # Install curl for testing purposes
   - 'docker exec --tty ${container_id} env TERM=xterm ${pkg_manager} install -y curl'
 
