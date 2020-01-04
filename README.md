@@ -54,14 +54,6 @@ Path where application data will be stored
 
 Java VM heap size
 
-## Deprecation warning
-
-The following vars are deprecated and will be removed
-in future releases. Please consult README.
-  - `bamboo_master`
-  - `bamboo_include_jdk`
-  - `openjdk_version`
-
 ## Dependencies
 
 None.

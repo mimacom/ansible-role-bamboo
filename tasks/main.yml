@@ -1,12 +1,5 @@
 ---
-- include_tasks: deprecated_vars.yml
-  when:
-    - bamboo_master is defined
-    - bamboo_include_jdk is defined
-    - openjdk_version is defined
-
 - include_tasks: jdk-{{ ansible_os_family }}.yml
   when: bamboo_master_include_jdk
-
 - include_tasks: bamboo.yml
 - include_tasks: fact.yml
