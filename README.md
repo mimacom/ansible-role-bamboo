@@ -54,10 +54,6 @@ Path where application data will be stored
 
 Java VM heap size
 
-    bamboo_master_hipchat_url: ""
-
-Set URL for HipChat integration (example: https://hipchat.domain.com/)
-
 ## Deprecation warning
 
 The following vars are deprecated and will be removed

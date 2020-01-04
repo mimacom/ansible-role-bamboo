@@ -22,7 +22,6 @@ USER={{ bamboo_master_user }}
 BASE={{ bamboo_master_binary_folder }}
 BAMBOO_HOME={{ bamboo_master_data_folder }}
 CATALINA_PID="$BASE/bin/catalina.pid"
-{% if bamboo_master_hipchat_url is defined %}CATALINA_OPTS=-Dhipchat.api.url={{ bamboo_master_hipchat_url }}{% endif %}
 
 case "$1" in
   # Start command
