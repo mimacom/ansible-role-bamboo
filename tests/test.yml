@@ -1,5 +1,7 @@
 ---
 - hosts: all
   become: true
+  vars:
+    bamboo_master_jvm_memory: 555m
   roles:
     - role_under_test

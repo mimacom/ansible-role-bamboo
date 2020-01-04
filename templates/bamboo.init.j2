@@ -14,7 +14,7 @@ set -e
 ######################################
 
 # Define some variables
-# Name of app ( bamboo, Confluence, etc )
+# Name of app
 APP=bamboo
 # Name of the user to run as
 USER={{ bamboo_master_user }}
@@ -30,6 +30,10 @@ case "$1" in
     export BAMBOO_HOME=${BAMBOO_HOME}
     export CATALINA_PID=${CATALINA_PID}
     export CATALINA_OPTS=${CATALINA_OPTS}
+    {% if bamboo_master_jvm_memory is defined %}
+    export JVM_MINIMUM_MEMORY={{ bamboo_master_jvm_memory }}
+    export JVM_MAXIMUM_MEMORY={{ bamboo_master_jvm_memory }}
+    {% endif %}
     start-stop-daemon --start --chuid $USER --pidfile $CATALINA_PID --background --exec "$BASE/bin/catalina.sh" -- start
     ;;
   # Stop command

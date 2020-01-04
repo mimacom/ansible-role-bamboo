@@ -3,6 +3,11 @@ Description=bamboo
 After=syslog.target network.target
 
 [Service]
+{% if bamboo_master_jvm_memory is defined %}
+Environment=JVM_MINIMUM_MEMORY={{ bamboo_master_jvm_memory }}
+Environment=JVM_MAXIMUM_MEMORY={{ bamboo_master_jvm_memory }}
+{% endif %}
+
 Environment=PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin:/bin{% if bamboo_agent is defined and bamboo_agent.capabilities is defined %}{% for item in bamboo_agent.capabilities %}{% if item.binary_path is defined %}:{{ item.binary_path }}{% endif %}{% endfor %}{% endif %}
 
 

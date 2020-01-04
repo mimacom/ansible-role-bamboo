@@ -85,18 +85,6 @@
     group: "{{ bamboo_master_user }}"
   notify: restart bamboo
 
-- name: Set JVM settings
-  replace:
-    dest: "{{ bamboo_master_binary_folder }}/bin/setenv.sh"
-    regexp: "{{ item.regexp }}"
-    replace: "{{ item.replace }}"
-  with_items:
-    - regexp: 'JVM_MINIMUM_MEMORY="[0-9]+[bkmg]'
-      replace: 'JVM_MINIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
-    - regexp: 'JVM_MAXIMUM_MEMORY="[0-9]+[bkmg]'
-      replace: 'JVM_MAXIMUM_MEMORY="{{ bamboo_master_jvm_memory }}'
-  notify: restart bamboo
-
 - name: Ensure daemon is reloaded (systemd)
   systemd:
     name: bamboo
