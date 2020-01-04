@@ -26,4 +26,4 @@ script:
   - 'docker exec --tty ${container_id} env TERM=xterm curl http://localhost:8085/'
 
   # Check if memory settings are applied
-  - 'docker exec --tty ${container_id} env TERM=xterm "ps aux | grep -v grep | grep Xmx555m"'
+  - 'docker exec --tty ${container_id} env TERM=xterm ps aux | grep -v grep | grep Xmx555m'
